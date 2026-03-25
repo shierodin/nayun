@@ -5,29 +5,61 @@
 <title>텍스트 게임</title>
 <style>
 body {
-    background: #111;
-    color: #fff;
+    background: #0f172a;
+    color: #e2e8f0;
     font-family: sans-serif;
-    text-align: center;
-    padding: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
 }
-#text {
-    font-size: 20px;
-    margin-bottom: 30px;
-    min-height: 60px;
+
+/* 전체 박스 */
+#game {
+    width: 400px;
+    background: #1e293b;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
 }
+
+/* 텍스트 출력칸 */
+#display {
+    background: #020617;
+    padding: 15px;
+    border-radius: 10px;
+    min-height: 80px;
+    margin-bottom: 20px;
+}
+
+/* 버튼 영역 */
+#buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
 button {
-    padding: 10px 20px;
-    margin: 10px;
-    font-size: 16px;
+    padding: 10px;
+    border: none;
+    border-radius: 10px;
+    background: #3b82f6;
+    color: white;
+    font-size: 15px;
     cursor: pointer;
+}
+
+button:hover {
+    background: #2563eb;
 }
 </style>
 </head>
 <body>
 
-<div id="text"></div>
-<div id="choices"></div>
+<div id="game">
+    <div id="display"></div>
+    <div id="buttons"></div>
+</div>
 
 <script>
 let fire = 0;
@@ -45,102 +77,103 @@ function sleep(ms) {
     return new Promise(r => setTimeout(r, ms));
 }
 
-function setText(t) {
-    document.getElementById("text").innerText = t;
+function text(t) {
+    document.getElementById("display").innerText = t;
 }
 
-function setChoices(arr) {
-    const div = document.getElementById("choices");
-    div.innerHTML = "";
-    arr.forEach(choice => {
+function buttons(arr) {
+    const box = document.getElementById("buttons");
+    box.innerHTML = "";
+
+    arr.forEach(b => {
         const btn = document.createElement("button");
-        btn.innerText = choice.text;
-        btn.onclick = choice.onClick;
-        div.appendChild(btn);
+        btn.innerText = b.text;
+        btn.onclick = b.onClick;
+        box.appendChild(btn);
     });
 }
 
-async function game() {
-    setText("아으! 오늘은 학원 없어서 개꿀잠 자겠네");
+async function start() {
+    text("아으! 오늘은 학원 없어서 개꿀잠 자겠네");
     await sleep(1000);
 
-    setText("뭐지; 왜 내가 여기에..");
+    text("뭐지; 왜 내가 여기에..");
     await sleep(1000);
 
-    setText("..?! 여기 나윤이 집이자나?!!");
+    text("..?! 여기 나윤이 집이자나?!!");
     await sleep(1000);
 
-    setText("그러면 설마.. 내가 나윤이가 된거?!!");
+    text("그러면 설마.. 내가 나윤이가 된거?!!");
 
-    setChoices([
-        { text: "네", onClick: () => { n = 1; i(); next1(); } },
-        { text: "아니여, 싫어요", onClick: () => { n = 2; i(); next1(); } }
+    buttons([
+        { text: "네", onClick: () => { n=1; i(); step1(); } },
+        { text: "싫어요", onClick: () => { n=2; i(); step1(); } }
     ]);
 }
 
-async function next1() {
-    setChoices([]);
-    setText("아침 먹고 나서 또 화장같은 걸 하고..");
+async function step1() {
+    buttons([]);
+    text("아침 먹고 나서 또 화장같은 걸 하고..");
     await sleep(1000);
 
-    setText("아오 왤케 많아 빨리 학교 갈끄야");
+    text("아오 왤케 많아 빨리 학교 갈끄야");
     await sleep(1000);
 
-    setChoices([
-        { text: "인사 해야징", onClick: () => { n = 1; i(); next2(); } },
-        { text: "걍 무시해", onClick: () => { n = 2; i(); next2(); } }
+    buttons([
+        { text: "인사한다", onClick: () => { n=1; i(); step2(); } },
+        { text: "무시한다", onClick: () => { n=2; i(); step2(); } }
     ]);
 }
 
-async function next2() {
-    setChoices([]);
-    setText("아오 오늘 학교 왤케 늦게 끝나");
+async function step2() {
+    buttons([]);
+    text("아오 오늘 학교 왤케 늦게 끝나");
     await sleep(1000);
 
-    setText("아 수학학원..!");
+    text("아 수학학원..!");
 
-    setChoices([
-        { text: "사랑함", onClick: () => { n = 1; i(); next3(); } },
-        { text: "싫어함", onClick: () => { n = 2; i(); next3(); } }
+    buttons([
+        { text: "사랑함", onClick: () => { n=1; i(); step3(); } },
+        { text: "싫어함", onClick: () => { n=2; i(); step3(); } }
     ]);
 }
 
-async function next3() {
-    setChoices([]);
-    setText("아.. 이제 영어학원??");
+async function step3() {
+    buttons([]);
+    text("아.. 이제 영어학원??");
     await sleep(1000);
 
-    setChoices([
-        { text: "예스 러브", onClick: () => { n = 1; i(); next4(); } },
-        { text: "크래이지;;", onClick: () => { n = 2; i(); next4(); } }
+    buttons([
+        { text: "러브", onClick: () => { n=1; i(); step4(); } },
+        { text: "노", onClick: () => { n=2; i(); step4(); } }
     ]);
 }
 
-async function next4() {
-    setChoices([]);
-    setText("아.. 이제 집 와서 숙제까지???");
+async function step4() {
+    buttons([]);
+    text("아.. 이제 집 와서 숙제까지???");
     await sleep(1000);
 
-    setText("아.. 숙제도 다 했고.. 이제 자야지");
+    text("아.. 숙제도 다 했고.. 이제 자야지");
     await sleep(1000);
 
     if (fire >= 2) {
-        setText("...");
+        text("...");
         await sleep(1000);
-        setText("싸가지 없어");
+        text("싸가지 없어");
 
-        for (let i = 0; i < 100; i++) {
+        for (let i=0;i<100;i++){
             console.log("싸가지 없다고");
         }
 
     } else if (fire <= 0) {
-        setText("...");
+        text("...");
         await sleep(1000);
-        setText("오늘 하루 좀 괜찮네");
+        text("오늘 하루 좀 괜찮네");
     }
 }
 
-game();
+start();
 </script>
 
 </body>

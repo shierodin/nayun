@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>텍스트 게임</title>
+</head>
+<body>
+<script>
+let fire = 0;
+let n;
+
+function i() {
+    if (n == "1") {
+        fire += 1;
+    } else {
+        fire -= 1;
+    }
+}
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function game() {
+    alert("아으! 오늘은 학원 없어서 개꿀잠 자겠네");
+    await sleep(1000);
+
+    alert("뭐지; 왜 내가 여기에..");
+    await sleep(1000);
+
+    alert("..?! 여기 나윤이 집이자나?!!");
+    await sleep(1000);
+
+    alert("그러면 설마.. 내가 나윤이가 된거?!!");
+
+    n = prompt("씼어야 한다\n(1: 네, 2: 아니여, 싫어요)");
+    i();
+
+    alert("아침 먹고 나서 또 화장같은 걸 하고..");
+    await sleep(1000);
+
+    alert("아오 왤케 많아 빨리 학교 갈끄야");
+    await sleep(1000);
+
+    n = prompt("오 휘경이를 만났다\n(1: 인사 해야징, 2: 걍 무시해)");
+    i();
+
+    await sleep(1000);
+
+    alert("아오 오늘 학교 왤케 늦게 끝나");
+    await sleep(1000);
+
+    alert("아 수학학원..!");
+
+    n = prompt("오키.. 1번 나윤이는 휘경이를 사랑한다??!!\n(1: 웅 당연히 사랑하징, 2: 아오 ㅈㄴ 싫어)");
+    i();
+
+    await sleep(1000);
+
+    alert("아.. 이제 영어학원??");
+    await sleep(1000);
+
+    n = prompt("1번 나윤 이스 러브 휘경???\n(1: 예스 아임 베리베리 러브, 2: 우웩 디스이스 크래이지;;");
+    i();
+
+    alert("아.. 이제 집 와서 숙제까지???");
+    await sleep(1000);
+
+    alert("아.. 숙제도 다 했고.. 이제 자야지");
+
+    if (fire >= 2) {
+        alert("...");
+        await sleep(1000);
+        for (let i = 0; i < 100; i++) {
+            console.log("싸가지 없다고");
+        }
+        alert("싸가지 없어");
+    } else if (fire <= 0) {
+        alert("...");
+        await sleep(1000);
+        alert("오늘 하루 좀 괜찮네");
+    }
+}
+
+game();
+</script>
+</body>
+</html>

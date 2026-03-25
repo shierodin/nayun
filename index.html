@@ -3,86 +3,145 @@
 <head>
 <meta charset="UTF-8">
 <title>텍스트 게임</title>
+<style>
+body {
+    background: #111;
+    color: #fff;
+    font-family: sans-serif;
+    text-align: center;
+    padding: 40px;
+}
+#text {
+    font-size: 20px;
+    margin-bottom: 30px;
+    min-height: 60px;
+}
+button {
+    padding: 10px 20px;
+    margin: 10px;
+    font-size: 16px;
+    cursor: pointer;
+}
+</style>
 </head>
 <body>
+
+<div id="text"></div>
+<div id="choices"></div>
+
 <script>
 let fire = 0;
-let n;
+let n = 0;
 
 function i() {
-    if (n == "1") {
-        fire += 1;
-    } else {
+    if (n === 1) {
         fire -= 1;
+    } else {
+        fire += 1;
     }
 }
 
 function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise(r => setTimeout(r, ms));
+}
+
+function setText(t) {
+    document.getElementById("text").innerText = t;
+}
+
+function setChoices(arr) {
+    const div = document.getElementById("choices");
+    div.innerHTML = "";
+    arr.forEach(choice => {
+        const btn = document.createElement("button");
+        btn.innerText = choice.text;
+        btn.onclick = choice.onClick;
+        div.appendChild(btn);
+    });
 }
 
 async function game() {
-    alert("아으! 오늘은 학원 없어서 개꿀잠 자겠네");
+    setText("아으! 오늘은 학원 없어서 개꿀잠 자겠네");
     await sleep(1000);
 
-    alert("뭐지; 왜 내가 여기에..");
+    setText("뭐지; 왜 내가 여기에..");
     await sleep(1000);
 
-    alert("..?! 여기 나윤이 집이자나?!!");
+    setText("..?! 여기 나윤이 집이자나?!!");
     await sleep(1000);
 
-    alert("그러면 설마.. 내가 나윤이가 된거?!!");
+    setText("그러면 설마.. 내가 나윤이가 된거?!!");
 
-    n = prompt("씼어야 한다\n(1: 네, 2: 아니여, 싫어요)");
-    i();
+    setChoices([
+        { text: "네", onClick: () => { n = 1; i(); next1(); } },
+        { text: "아니여, 싫어요", onClick: () => { n = 2; i(); next1(); } }
+    ]);
+}
 
-    alert("아침 먹고 나서 또 화장같은 걸 하고..");
+async function next1() {
+    setChoices([]);
+    setText("아침 먹고 나서 또 화장같은 걸 하고..");
     await sleep(1000);
 
-    alert("아오 왤케 많아 빨리 학교 갈끄야");
+    setText("아오 왤케 많아 빨리 학교 갈끄야");
     await sleep(1000);
 
-    n = prompt("오 휘경이를 만났다\n(1: 인사 해야징, 2: 걍 무시해)");
-    i();
+    setChoices([
+        { text: "인사 해야징", onClick: () => { n = 1; i(); next2(); } },
+        { text: "걍 무시해", onClick: () => { n = 2; i(); next2(); } }
+    ]);
+}
 
+async function next2() {
+    setChoices([]);
+    setText("아오 오늘 학교 왤케 늦게 끝나");
     await sleep(1000);
 
-    alert("아오 오늘 학교 왤케 늦게 끝나");
+    setText("아 수학학원..!");
+
+    setChoices([
+        { text: "사랑함", onClick: () => { n = 1; i(); next3(); } },
+        { text: "싫어함", onClick: () => { n = 2; i(); next3(); } }
+    ]);
+}
+
+async function next3() {
+    setChoices([]);
+    setText("아.. 이제 영어학원??");
     await sleep(1000);
 
-    alert("아 수학학원..!");
+    setChoices([
+        { text: "예스 러브", onClick: () => { n = 1; i(); next4(); } },
+        { text: "크래이지;;", onClick: () => { n = 2; i(); next4(); } }
+    ]);
+}
 
-    n = prompt("오키.. 1번 나윤이는 휘경이를 사랑한다??!!\n(1: 웅 당연히 사랑하징, 2: 아오 ㅈㄴ 싫어)");
-    i();
-
+async function next4() {
+    setChoices([]);
+    setText("아.. 이제 집 와서 숙제까지???");
     await sleep(1000);
 
-    alert("아.. 이제 영어학원??");
+    setText("아.. 숙제도 다 했고.. 이제 자야지");
     await sleep(1000);
-
-    n = prompt("1번 나윤 이스 러브 휘경???\n(1: 예스 아임 베리베리 러브, 2: 우웩 디스이스 크래이지;;");
-    i();
-
-    alert("아.. 이제 집 와서 숙제까지???");
-    await sleep(1000);
-
-    alert("아.. 숙제도 다 했고.. 이제 자야지");
 
     if (fire >= 2) {
-        alert("...");
+        setText("...");
         await sleep(1000);
+        setText("싸가지 없어");
+
         for (let i = 0; i < 100; i++) {
             console.log("싸가지 없다고");
         }
-        alert("싸가지 없어");
+
     } else if (fire <= 0) {
-        alert("...");
+        setText("...");
         await sleep(1000);
-        alert("오늘 하루 좀 괜찮네");
+        setText("오늘 하루 좀 괜찮네");
     }
 }
 
 game();
 </script>
+
 </body>
 </html>

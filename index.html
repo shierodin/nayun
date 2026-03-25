@@ -5,48 +5,37 @@
 <title>텍스트 게임</title>
 <style>
 body {
-    background: #0f172a;
-    color: #e2e8f0;
+    background: black;
+    color: white;
     font-family: sans-serif;
+    margin: 0;
+}
+
+/* 위 = 텍스트 화면 */
+#display {
+    height: 70vh;
+    padding: 30px;
+    font-size: 22px;
+    border-bottom: 2px solid #444;
+}
+
+/* 아래 = 버튼 화면 */
+#controls {
+    height: 30vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-}
-
-/* 전체 박스 */
-#game {
-    width: 400px;
-    background: #1e293b;
-    border-radius: 15px;
-    padding: 20px;
-    box-shadow: 0 0 20px rgba(0,0,0,0.5);
-}
-
-/* 텍스트 출력칸 */
-#display {
-    background: #020617;
-    padding: 15px;
-    border-radius: 10px;
-    min-height: 80px;
-    margin-bottom: 20px;
-}
-
-/* 버튼 영역 */
-#buttons {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+    gap: 20px;
 }
 
 button {
-    padding: 10px;
+    padding: 15px 25px;
+    font-size: 18px;
     border: none;
     border-radius: 10px;
+    cursor: pointer;
     background: #3b82f6;
     color: white;
-    font-size: 15px;
-    cursor: pointer;
 }
 
 button:hover {
@@ -56,10 +45,11 @@ button:hover {
 </head>
 <body>
 
-<div id="game">
-    <div id="display"></div>
-    <div id="buttons"></div>
-</div>
+<!-- 텍스트 전용 화면 -->
+<div id="display"></div>
+
+<!-- 버튼 전용 화면 -->
+<div id="controls"></div>
 
 <script>
 let fire = 0;
@@ -82,14 +72,14 @@ function text(t) {
 }
 
 function buttons(arr) {
-    const box = document.getElementById("buttons");
-    box.innerHTML = "";
+    const c = document.getElementById("controls");
+    c.innerHTML = "";
 
     arr.forEach(b => {
         const btn = document.createElement("button");
         btn.innerText = b.text;
         btn.onclick = b.onClick;
-        box.appendChild(btn);
+        c.appendChild(btn);
     });
 }
 

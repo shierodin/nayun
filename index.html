@@ -2,168 +2,133 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<title>텍스트 게임</title>
+<title>문제 랜덤 룰렛</title>
 <style>
-body {
-    background: black;
-    color: white;
-    font-family: sans-serif;
-    margin: 0;
+body{
+    margin:0;
+    background:#111;
+    color:white;
+    font-family:Arial, Helvetica, sans-serif;
+    text-align:center;
+}
+h1{margin-top:30px;}
+
+.roulette-wrap{
+    margin:40px auto;
+    width:420px;
+    height:420px;
+    position:relative;
 }
 
-/* 위 = 텍스트 화면 */
-#display {
-    height: 70vh;
-    padding: 30px;
-    font-size: 22px;
-    border-bottom: 2px solid #444;
+.wheel{
+    width:100%;
+    height:100%;
+    border-radius:50%;
+    border:8px solid white;
+    position:absolute;
+    transition: transform 4s cubic-bezier(.17,.67,.35,1.2);
 }
 
-/* 아래 = 버튼 화면 */
-#controls {
-    height: 30vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 20px;
+.pointer{
+    width:0;
+    height:0;
+    border-left:20px solid transparent;
+    border-right:20px solid transparent;
+    border-bottom:40px solid red;
+    position:absolute;
+    top:-35px;
+    left:50%;
+    transform:translateX(-50%);
 }
 
-button {
-    padding: 15px 25px;
-    font-size: 18px;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    background: #3b82f6;
-    color: white;
+button{
+    padding:12px 30px;
+    font-size:18px;
+    border:none;
+    border-radius:8px;
+    background:#ff4757;
+    color:white;
+    cursor:pointer;
+    margin-top:20px;
 }
 
-button:hover {
-    background: #2563eb;
+#result{
+    margin-top:30px;
+    font-size:28px;
+    font-weight:bold;
 }
 </style>
 </head>
 <body>
 
-<!-- 텍스트 전용 화면 -->
-<div id="display"></div>
+<h1>🎡 문제 랜덤 룰렛 🎡</h1>
 
-<!-- 버튼 전용 화면 -->
-<div id="controls"></div>
+<div class="roulette-wrap">
+    <div class="pointer"></div>
+    <canvas id="wheelCanvas" class="wheel"></canvas>
+</div>
+
+<button onclick="spin()">룰렛 돌리기</button>
+<div id="result"></div>
 
 <script>
-let fire = 0;
-let n = 0;
+const canvas = document.getElementById('wheelCanvas');
+const ctx = canvas.getContext('2d');
+canvas.width = 420;
+canvas.height = 420;
 
-function i() {
-    if (n === 1) {
-        fire -= 1;
-    } else {
-        fire += 1;
+let stage = 1; // 1: 버전 선택, 2: 문제 선택
+let selectedVersion = 0;
+let items = ["Ver 1","Ver 2","Ver 3"];
+
+function drawWheel(list){
+    const arc = Math.PI * 2 / list.length;
+    for(let i=0;i<list.length;i++){
+        ctx.beginPath();
+        ctx.moveTo(210,210);
+        ctx.arc(210,210,210,i*arc,(i+1)*arc);
+        ctx.fillStyle = i%2==0 ? "#1e90ff" : "#3742fa";
+        ctx.fill();
+        ctx.save();
+        ctx.translate(210,210);
+        ctx.rotate(i*arc + arc/2);
+        ctx.fillStyle="white";
+        ctx.font="20px Arial";
+        ctx.fillText(list[i],80,10);
+        ctx.restore();
     }
 }
 
-function sleep(ms) {
-    return new Promise(r => setTimeout(r, ms));
-}
+drawWheel(items);
 
-function text(t) {
-    document.getElementById("display").innerText = t;
-}
+function spin(){
+    const wheel = document.querySelector('.wheel');
+    const randomDeg = 3600 + Math.floor(Math.random()*360);
+    wheel.style.transform = `rotate(${randomDeg}deg)`;
 
-function buttons(arr) {
-    const c = document.getElementById("controls");
-    c.innerHTML = "";
+    setTimeout(()=>{
+        const arc = 360/items.length;
+        const deg = randomDeg % 360;
+        const index = Math.floor((360-deg)/arc) % items.length;
 
-    arr.forEach(b => {
-        const btn = document.createElement("button");
-        btn.innerText = b.text;
-        btn.onclick = b.onClick;
-        c.appendChild(btn);
-    });
-}
-
-async function start() {
-    text("아으! 오늘은 학원 없어서 개꿀잠 자겠네");
-    await sleep(1000);
-
-    text("뭐지; 왜 내가 여기에..");
-    await sleep(1000);
-
-    text("..?! 여기 나윤이 집이자나?!!");
-    await sleep(1000);
-
-    text("그러면 설마.. 내가 나윤이가 된거?!!");
-
-    buttons([
-        { text: "네", onClick: () => { n=1; i(); step1(); } },
-        { text: "싫어요", onClick: () => { n=2; i(); step1(); } }
-    ]);
-}
-
-async function step1() {
-    buttons([]);
-    text("아침 먹고 나서 또 화장같은 걸 하고..");
-    await sleep(1000);
-
-    text("아오 왤케 많아 빨리 학교 갈끄야");
-    await sleep(1000);
-
-    buttons([
-        { text: "인사한다", onClick: () => { n=1; i(); step2(); } },
-        { text: "무시한다", onClick: () => { n=2; i(); step2(); } }
-    ]);
-}
-
-async function step2() {
-    buttons([]);
-    text("아오 오늘 학교 왤케 늦게 끝나");
-    await sleep(1000);
-
-    text("아 수학학원..!");
-
-    buttons([
-        { text: "사랑함", onClick: () => { n=1; i(); step3(); } },
-        { text: "싫어함", onClick: () => { n=2; i(); step3(); } }
-    ]);
-}
-
-async function step3() {
-    buttons([]);
-    text("아.. 이제 영어학원??");
-    await sleep(1000);
-
-    buttons([
-        { text: "러브", onClick: () => { n=1; i(); step4(); } },
-        { text: "노", onClick: () => { n=2; i(); step4(); } }
-    ]);
-}
-
-async function step4() {
-    buttons([]);
-    text("아.. 이제 집 와서 숙제까지???");
-    await sleep(1000);
-
-    text("아.. 숙제도 다 했고.. 이제 자야지");
-    await sleep(1000);
-
-    if (fire >= 2) {
-        text("...");
-        await sleep(1000);
-        text("싸가지 없어");
-
-        for (let i=0;i<100;i++){
-            console.log("싸가지 없다고");
+        if(stage===1){
+            selectedVersion = index+1;
+            document.getElementById("result").innerText =
+              `👉 선택된 버전: Ver ${selectedVersion}`;
+            stage=2;
+            items = ["01","02","03","04","05","06","07","08","09","10"];
+            ctx.clearRect(0,0,420,420);
+            drawWheel(items);
+        }else{
+            document.getElementById("result").innerText =
+              `🎯 Ver ${selectedVersion} - 문제 ${items[index]}`;
+            stage=1;
+            items = ["Ver 1","Ver 2","Ver 3"];
+            ctx.clearRect(0,0,420,420);
+            drawWheel(items);
         }
-
-    } else if (fire <= 0) {
-        text("...");
-        await sleep(1000);
-        text("오늘 하루 좀 괜찮네");
-    }
+    },4200);
 }
-
-start();
 </script>
 
 </body>
